@@ -9,6 +9,9 @@ export default new Router({
     {
       path: '/',
       name: 'login',
+      meta: {
+        title: '登录'
+      },
       component: Login
     },
     {
@@ -18,26 +21,35 @@ export default new Router({
       children: [{
         path: '/display',
         name: 'display',
+        meta: {
+          title: '演出'
+        },
         component: () => import('./views/DisplayList.vue')
+      },
+      {
+        path: '/ddetail/:id',
+        name: 'ddetail',
+        meta: {
+          title: '编辑演出'
+        },
+        component: () => import('./views/display/DisplayDetail.vue')
       },
       {
         path: '/order',
         name: 'order',
+        meta: {
+          title: '订单'
+        },
         component: () => import('./views/OrderList.vue')
       },
       {
         path: '/user',
         name: 'user',
+        meta: {
+          title: '管理员'
+        },
         component: () => import('./views/AdminList.vue')
       }]
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     }
   ]
 })

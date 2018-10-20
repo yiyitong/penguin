@@ -1,8 +1,9 @@
 <template>
   <header>
-   <div class="logo">
-     <span class="img"></span>辣浪电音小程序管理后台
-   </div>
+   <h1>辣浪电音小程序管理后台
+   </h1>
+   <breadcrumb></breadcrumb>
+        
      <!-- <el-dropdown trigger="click" menu-align="end" id="dropdownMenu1">
           <span :title="username" id="user_name" class="user-info-wrap">
             <i class="iconfont icon-user"></i>
@@ -25,6 +26,8 @@
 </template>
 <script>
 import { Dropdown, DropdownMenu, DropdownItem, Tooltip } from 'element-ui'
+import Breadcrumb from '@/components/Breadcrumb.vue'
+
 // import userPwdModal from './userPwdModal'
 export default {
   data () {
@@ -37,8 +40,23 @@ export default {
     elDropdown: Dropdown,
     elDropdownMenu: DropdownMenu,
     elDropdownItem: DropdownItem,
-    elTooltip: Tooltip
-    // userPwdModal
+    elTooltip: Tooltip,
+    Breadcrumb
   }
 }
 </script>
+
+<style scoped>
+  header {
+    height: 50px;
+    background-color: #3c8dbc;
+    color: #fff;
+  }
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: left;
+    padding-left: 20px;
+  }
+</style>

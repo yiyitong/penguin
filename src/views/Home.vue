@@ -1,20 +1,13 @@
 <template>
-  <div style="min-height: 100%;">
+  <div style="height: 100%;">
     <header-view></header-view>
     <section class="wrapper">
       <div class="siderbar">
         <nav-view></nav-view>
       </div>
       <div class="content">
-        <!-- <breadcrumb></breadcrumb> -->
-        <div>
-          <div class="panel">
-            <div class="panel-body">
-              <router-view>
-              </router-view>
-            </div>
-          </div>
-        </div>
+        <router-view>
+        </router-view>
       </div>
       <ifooter></ifooter>
     </section>

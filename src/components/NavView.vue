@@ -47,7 +47,7 @@ export default {
     padding: 0;
     position: relative;
     display: block;
-    width: 194px;
+    height: 44px;
 }
 .nav li a {
     padding: 8px;
@@ -59,10 +59,16 @@ export default {
     white-space:nowrap;
     overflow:hidden;
     color: #333;
-    border-bottom: 1px solid blue;
+    text-align: left;
+    padding: 15px;
 }
 .nav li a:hover {
+    background: #eee;
+}
+.nav li a.router-link-exact-active {
+    background: #eee;
 }
 /*左侧界面样式 end*/
+
 
 </style>
