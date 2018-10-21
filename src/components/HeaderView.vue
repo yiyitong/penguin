@@ -2,8 +2,7 @@
   <header>
    <h1>辣浪电音小程序管理后台
    </h1>
-   <breadcrumb></breadcrumb>
-        
+         
      <!-- <el-dropdown trigger="click" menu-align="end" id="dropdownMenu1">
           <span :title="username" id="user_name" class="user-info-wrap">
             <i class="iconfont icon-user"></i>
@@ -26,7 +25,6 @@
 </template>
 <script>
 import { Dropdown, DropdownMenu, DropdownItem, Tooltip } from 'element-ui'
-import Breadcrumb from '@/components/Breadcrumb.vue'
 
 // import userPwdModal from './userPwdModal'
 export default {
@@ -40,8 +38,7 @@ export default {
     elDropdown: Dropdown,
     elDropdownMenu: DropdownMenu,
     elDropdownItem: DropdownItem,
-    elTooltip: Tooltip,
-    Breadcrumb
+    elTooltip: Tooltip
   }
 }
 </script>

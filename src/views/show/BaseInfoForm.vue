@@ -4,7 +4,15 @@
             <el-input v-model="showForm.name"></el-input>
         </el-form-item>
         <el-form-item label="海报" prop="posterURL">
-            <el-input v-model="showForm.posterURL"></el-input>
+            <el-upload class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :file-list="uploadedFiles"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
         </el-form-item>
         <el-form-item label="演出日期">
             <el-col :span="11">
@@ -13,8 +21,8 @@
             </el-col>
             <el-col class="line" :span="2">-</el-col>
             <el-col :span="11">
-                <el-time-picker type="date" placeholder="结束日期" 
-                v-model="showForm.endDate" style="width: 100%;"></el-time-picker>
+                <el-date-picker type="date" placeholder="结束日期" 
+                v-model="showForm.endDate" style="width: 100%;"></el-date-picker>
             </el-col>
         </el-form-item>
         <el-form-item label="演出票价" >
@@ -23,15 +31,11 @@
                 @add="addTicketType" @edit="editTicketType">
             </datagrid>
         </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-            <el-button @click="resetForm('loginForm')">取消</el-button>
-        </el-form-item>
     </el-form>
 </template>
 <script>
 import Column from '@/common/beans/Column' 
-import {TimePicker, DatePicker} from 'element-ui'
+import {TimePicker, DatePicker, Upload} from 'element-ui'
 import Datagrid from '@/components/Datagrid.vue'
 export default {
     data () {
@@ -61,15 +65,28 @@ export default {
                 name: null,
                 dailyPrice: null,
                 allPrice: null
-            }
+            },
+            posterVisible: false,
+            uploadedFiles: [{
+                name: 'food.jpeg',
+                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+            }]
         }
     },
     components: {
         ElTimePicker: TimePicker,
         ElDatePicker: DatePicker,
-        Datagrid
+        Datagrid,
+        ElUpload: Upload
     },
     props: ['item'],
+    computed: {
+        posterUrl () {
+            let url = this.uploadedFiles.length > 0 ? this.uploadedFiles[0].url : '';
+            this.showForm.posterURL = url;
+            return url;
+        }
+    },
     methods: {
         deleteTicketType(item) {
             console.info('del the ticket type: ', item)
@@ -84,7 +101,24 @@ export default {
             console.info('edit the ticket type: ', item)
             let index = this.showForm.ticketsList.findIndex(el => el.id === item.id);
             this.showForm.ticketsList.splice(index, 1, item)
+        },
+        handlePreview(file) {
+            console.info(file)
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+            this.uploadedFiles = []
+        },
+        reset() {
+            this.$refs['showForm'].resetFields();
+            this.showForm.ticketsList = [];
+            this.uploadedFiles = []
+            console.info('reset baseinfoform:', this.showForm)
         }
+    },
+    mounted () {
+        console.info('baseinfofrom mouted。。。。')
+        this.showForm = Object.assign(this.showForm, this.item)
     }
 }
 </script>

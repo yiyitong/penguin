@@ -6,7 +6,11 @@ import { Button,
     Checkbox,
     Dialog,
     MessageBox,
-    Col
+    Notification,
+    Col,
+    Alert,
+    Select,
+    Option
 } from 'element-ui'
 
 Vue.use(Button);
@@ -15,8 +19,13 @@ Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(Checkbox);
 Vue.use(Dialog);
-Vue.use(Col)
+Vue.use(Col);
+Vue.use(Alert);
+Vue.use(Select);
+Vue.use(Option);
 
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
+Vue.prototype.$notify = Notification;
+

@@ -6,6 +6,7 @@
         <nav-view></nav-view>
       </div>
       <div class="content">
+        <breadcrumb></breadcrumb>
         <router-view>
         </router-view>
       </div>
@@ -19,12 +20,15 @@
 import NavView from '@/components/NavView.vue'
 import HeaderView from '@/components/HeaderView.vue'
 import Ifooter from '@/components/footer.vue'
+import Breadcrumb from '@/components/Breadcrumb.vue'
+
 export default {
   name: 'home',
   components: {
     NavView,
     HeaderView,
-    Ifooter
+    Ifooter,
+    Breadcrumb
   }
 }
 </script>

@@ -18,13 +18,14 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: () => import('./views/Home.vue'),
+      redirect: 'display',
       children: [{
         path: '/display',
         name: 'display',
         meta: {
           title: '演出'
         },
-        component: () => import('./views/DisplayList.vue')
+        component: () => import('./views/show/ShowList.vue')
       },
       {
         path: '/ddetail/:id',
@@ -32,7 +33,7 @@ export default new Router({
         meta: {
           title: '编辑演出'
         },
-        component: () => import('./views/display/DisplayDetail.vue')
+        component: () => import('./views/show/ShowViewer.vue')
       },
       {
         path: '/order',

@@ -28,17 +28,19 @@
           </div>
         </slot>
         <slot v-else :name="col.prop" :item="scope.row">
-          <div>{{scope.row.editing}}
-            <el-form-item v-if="scope.row.editing || curIndex === scope.$index" >
-              <el-input v-model="scope.row[col.prop]" required></el-input>
-            </el-form-item>
+          <div>
+            <el-input v-if="col.editable && (scope.row.editing || curIndex === scope.$index)"
+              v-model="scope.row[col.prop]" required></el-input>
             <span v-else>{{scope.row[col.prop]}}</span>
           </div>
         </slot>
       </template>
     </el-table-column>
   </el-table>
-  <el-button v-if="addable && mode !=='add'" @click="beginAdd">添加</el-button>
+  <div style="text-align:left; margin-top: 10px;">
+    <el-button v-if="addable && mode !=='add'" 
+      icon="el-icon-plus" @click="beginAdd">添加</el-button>
+  </div>
   </div>
 </template>
 <script>
@@ -173,6 +175,7 @@ export default {
       item.editing = false
     },
     editOne (item, index) {
+      item.editing = true
       this.curOrigin = Object.assign(item) // 暫存正在編輯的記錄原值cue
       this.curIndex = index
       this.mode = 'edit'

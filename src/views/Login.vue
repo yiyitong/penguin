@@ -23,7 +23,7 @@
                 <el-button @click="cancelReset">取 消</el-button>
                 <el-button type="primary" @click="handleReset">确 定</el-button>
             </div>
-            </el-dialog>
+        </el-dialog>
     </section>
 </template>
 

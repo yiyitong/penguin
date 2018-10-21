@@ -1,19 +1,8 @@
 <template>
     <section>
-        <datagrid :columns="columns" :records="adminList"
+        <datagrid :columns="columns" :records="checkorList"
          class="el-table_pagination" editable  @del="handleDel" 
                 @add="handleAdd" @edit="handleEdit" :empty-item="emptyItem">
-            <div  slot-scope="{item}" slot="auth" >
-                <el-select v-model="item.auth" v-if="item.editing" placeholder="请选择">
-                    <el-option
-                    v-for="(value, key) in authLevel"
-                    :key="key"
-                    :label="value"
-                    :value="key">
-                    </el-option>
-                </el-select>
-                <span v-else>{{authLevel[item.auth]}}</span>
-            </div>
         </datagrid>
     </section>
     
@@ -21,59 +10,62 @@
 <script>
 import Column from '@/common/beans/Column' 
 import Datagrid from '@/components/Datagrid.vue'
-import adminAPI from '@/api/admin.js'
-import consts from '@/common/Consts.js'
+import checkorAPI from '@/api/checkor.js'
 import {
   mapState
 } from 'vuex'
 export default {
     data () {
         return {
-            adminList: [{id: 1, name: 'super', passwd: 'qqian',
-            auth: '0', checkCount: 0
+            checkorList: [{id: 1, weID: 'yiyitong', weName: 'qqian',
+            showName: '中秋晚会', checkCount: 0
             }],
             columns: [
                 new Column('id', 'ID', 150, {visible: false}),
-                new Column('name', '名称', 150, {sortable: true}),
-                new Column('passwd', '密码', 150),
-                new Column('auth', '管理员类型', 150),
+                new Column('weID', '微信号', 150, {sortable: true}),
+                new Column('weName', '微信名', 150, {sortable: true}),
+                new Column('showName', '演出', 150, {editable: false}),
+                new Column('checkCount', '已检票数', 150, {editable: false}),
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
             emptyItem: {
                 id: -1,
-                name: null,
-                passwd: null,
-                auth: null
-            },
-            authLevel: consts.ADMIN_ANTH_TYPE
+                weID: null,
+                weName: null,
+                showName: '',
+                checkCount: 0
+            }
         }
     },
     computed: {
         ...mapState({
-            curShow: state => state.shows.curShow
+        curShow: state => state.shows.curShow
         })
     },
     components: {
         Datagrid
     },
+    watch : {
+        'curShow.name': 'updateEmptyShowName'
+    },
     methods: {
         handleDel(item) {
             console.info('del the checkor: ', item)
-            adminAPI.del(item.id).then(() => {
+            checkorAPI.del(item.id).then((res) => {
                 let index = this.checkorList.findIndex(el => el.id === item.id);
                 this.checkorList.splice(index, 1);
             })       
         },
         handleAdd(item) {
             console.info('add the checkor: ', item)
-            adminAPI.add(item).then((res) => {
+            checkorAPI.add(item).then((res) => {
                 this.checkorList.push(res) 
             })
         },
         handleEdit(item) {
             console.info('edit the checkor: ', item)
-            adminAPI.update(item).then(() => {
+            checkorAPI.update(item).then((res) => {
                 let index = this.checkorList.findIndex(el => el.id === item.id);
                 this.checkorList.splice(index, 1, item);
             }) 
@@ -81,6 +73,9 @@ export default {
         updateEmptyShowName (val) {
             this.emptyItem.showName = val;
         }
+    },
+    mounted () {
+        this.emptyItem.showName = this.curShow.name;
     }
 }
 </script>
