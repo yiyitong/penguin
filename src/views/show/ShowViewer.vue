@@ -32,7 +32,7 @@ import {Tabs, TabPane} from 'element-ui'
 import BaseInfoForm from './BaseInfoForm.vue'
 import CheckorMg from './CheckorMg.vue'
 import ShowDetail from './ShowDetail.vue'
-import displayAPI from '@/api/display.js'
+import showAPI from '@/api/show.js'
 import {
   mapState
 } from 'vuex'
@@ -57,7 +57,7 @@ export default {
             let newShow = this.$refs['baseinfo'].showForm;
             console.info('edit show base info:', newShow)
             // ajax
-            displayAPI.update(newShow).then(() => {
+            showAPI.update(newShow).then(() => {
                 this.$notify({
                     title: '成功',
                     message: '修改成功!',

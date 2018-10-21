@@ -1,7 +1,7 @@
 
 import Vue from 'vue';
 
-let baseUrl = '/display';
+let baseUrl = '/show';
 export default {
   ls: (query) => Vue.axios.get(baseUrl, query),
   add: (options) => Vue.axios.post(baseUrl, options),

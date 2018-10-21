@@ -3,7 +3,7 @@
 </template>
 <script>
 import AppEdit from '@/components/AppEdit.vue'
-import showAPI from '@/api/display.js'
+import showAPI from '@/api/show.js'
 export default {
     components: {
         AppEdit

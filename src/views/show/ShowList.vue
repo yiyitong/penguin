@@ -23,7 +23,7 @@
 <script>
 import Column from '@/common/beans/Column' 
 import Datagrid from '@/components/Datagrid.vue'
-import displayAPI from '@/api/display.js'
+import showAPI from '@/api/show.js'
 import BaseInfoForm from './BaseInfoForm.vue'
 import {
   mapActions
@@ -68,7 +68,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                displayAPI.del(item.id).then(() => { 
+                showAPI.del(item.id).then(() => { 
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -89,7 +89,7 @@ export default {
             let newShow = this.$refs['baseinfo'].showForm;
             console.info('will add new show:', newShow);
             // Ajax
-            displayAPI.add(newShow).then((res) => {
+            showAPI.add(newShow).then((res) => {
                 this.displayList.push(res)
             })
         }
