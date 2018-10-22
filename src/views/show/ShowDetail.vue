@@ -11,10 +11,12 @@ export default {
     data () {
         return {
             contents: [{
-                'text': 'hello'
+                type: 'text',
+                value: 'hello'
             },
             {
-                'image': ''
+                type: 'image',
+                value: 'hello'
             }]
         }
     },
