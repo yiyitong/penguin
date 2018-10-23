@@ -5,7 +5,10 @@
                 <div v-for="(content, index) in contentList" class="editor-item"
                     :key="index" :tabindex="index" @mouseover="handleMouseIn(index, content)"
                     @mouseout="handleMouseOut(index, content)">
-                    <textarea v-if="content.type === 'text'" v-model="content.value"></textarea>
+                    <div class="textarea" contenteditable="true" v-if="content.type === 'text'" >
+                        {{content.value}}
+                    </div>
+                    <!-- <textarea v-if="content.type === 'text'" v-model="content.value"></textarea> -->
                     <img v-if="content.type === 'image'" :src="content.value">
                     <div class="add-module" v-if="content.type === 'empty'">
                         <el-button @click="change2Text(index)">A</el-button>
@@ -30,7 +33,12 @@
                 </div>
             </div>
         </div>
-        <button class="editor-btn el-btn" @click="addAtLast">+ 添加模块</button>
+        <div class="editor-btn-viewer">
+            <el-button class="editor-btn" icon="el-icon-circle-check-outline"
+                @click="finishEdit"> 完成编辑</el-button>
+            <el-button class="editor-btn" icon="el-icon-circle-plus-outline" @click="addAtLast"> 添加模块</el-button>
+        </div>
+        
     </div>
 </template>
 
@@ -98,16 +106,17 @@ export default {
             return isJPG && isLt2M;
         },
         handleMouseIn (index) {
-            let item = this.contentList[index]
-            item.visible = true
-            this.spliceContent(index, 1, item)
-            console.info('handlemousein:', item)  
+            let item = this.contentList[index];
+            item.visible = true;
+            this.spliceContent(index, 1, item);
         },
         handleMouseOut (index) {
-            let item = this.contentList[index]
-            item.visible = false
+            let item = this.contentList[index];
+            item.visible = false;
             this.spliceContent(index, 1, item);
-            console.info('handlemouseOut:', item)  
+        },
+        finishEdit () {
+
         }
     },
     mounted () {
@@ -127,20 +136,32 @@ export default {
 }
 .content-viewer {
     width: 100%;
-    height: 549px;
+    height: 552px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
-.editor-btn{
+.editor-btn-viewer {
     width: 100%;
-    padding: 15px;
-    background: #eee;
     position: absolute;
     bottom: 0;
     left: 0;
+}
+.el-button {
+    background-color: #eee;
+}
+.editor-btn{
+    width: 50%;
+    padding: 15px;
     outline: none;
-    border: 1px solid #eee;
-    border-top: 1px solid #ddd;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    margin: 0;
+    font-size: 16px;
+}
+.el-button:hover {
+    color: #409eff;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
 }
 .content-list {
     padding: 5px;
@@ -155,12 +176,13 @@ div.editor-item:hover{
     box-shadow: 0 0 10px #ccc;
 
 }
-.editor-item>textarea, 
+.editor-item>.textarea, 
  .editor-item>img{
     width: 100%;
     height: auto;
     border: 1px solid #ccc;
     min-height: 200px;
+    text-align: left;
 }
 .editor-item>img{
     width: 571px;

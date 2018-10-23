@@ -1,7 +1,7 @@
 <template>
     <section>
         <datagrid :columns="columns" :records="displayList" :emptyText="emptyText"
-         class="el-table_pagination" pagable>
+         class="el-table_pagination" pagable @refresh="refreshShows">
             <div class="td-ops" slot-scope="{item}" slot="ops" >
                 <a @click="gotoEdit(item)">编辑</a>
                 <a title="删除" name="bin" @click="delOne(item)">删除</a>
@@ -25,6 +25,9 @@ import Column from '@/common/beans/Column'
 import Datagrid from '@/components/Datagrid.vue'
 import showAPI from '@/api/show.js'
 import BaseInfoForm from './BaseInfoForm.vue'
+import Query from '@/common/beans/Query.js'
+import Order from '@/common/beans/Order.js'
+import methods from '@/common/methods.js'
 import {
   mapActions
 } from 'vuex'
@@ -46,7 +49,8 @@ export default {
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
-            addShowVisible: false
+            addShowVisible: false,
+            query: new Query(new Order('showTime', Order.DIREC.DESC))
         }
     },
     components: {
@@ -57,6 +61,20 @@ export default {
         ...mapActions([
         'setCurShow'
         ]),
+        initData () {
+            let query = methods.deepCopy({}, this.query)
+            showAPI.ls(query).then(({data}) => {
+                this.displayList = data.content
+                this.total = data.total
+                if (data.content.length === 0) {
+                    this.emptyText = '无相关数据'
+                }
+            })
+        },
+        refreshShows (query) {
+            this.query = methods.deepCopy(this.query, query)
+            this.initData()
+        },
         gotoEdit (item) {
             console.info(item);
             this.setCurShow(item);
@@ -93,6 +111,9 @@ export default {
                 this.displayList.push(res)
             })
         }
+    },
+    mounted () {
+        this.initData()
     }
 }
 </script>

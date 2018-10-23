@@ -37,6 +37,13 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination v-if="pagable" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="query.page.index"
+      :page-sizes="[10, 20, 100]"
+      :page-size="query.page.size" :total="total"
+      layout="sizes, prev, pager, next, jumper, total">
+    </el-pagination>
   <div style="text-align:left; margin-top: 10px;">
     <el-button v-if="addable && mode !=='add'" 
       icon="el-icon-plus" @click="beginAdd">添加</el-button>
@@ -44,13 +51,15 @@
   </div>
 </template>
 <script>
-import {table, tableColumn, popover} from 'element-ui'
+import {table, tableColumn, popover, pagination} from 'element-ui'
 import BtnLink from '@/components/BtnLink.vue'
+import Query from '@/common/beans/Query.js'
 export default {
   components: {
     elTable: table,
     elTableColumn: tableColumn,
     elPopover: popover,
+    elPagination: pagination,
     BtnLink
   },
   props: {
@@ -117,13 +126,20 @@ export default {
       default () {
         return {}
       }
+    },
+    query: {
+      type: Object,
+      default () {
+        return new Query();
+      }
     }
   },
   data () {
     return {
       curIndex: -1, //编辑时使用,
       mode: 'list',
-      curOrigin: {}
+      curOrigin: {},
+      total: 0
     }
   },
   computed: {
@@ -179,10 +195,23 @@ export default {
       this.curOrigin = Object.assign(item) // 暫存正在編輯的記錄原值cue
       this.curIndex = index
       this.mode = 'edit'
+    },
+    handleSizeChange (val) {
+      this.query.page.size = val
+      this.$emit('refresh', this.query)
+    },
+    handleCurrentChange (val) {
+      this.query.page.index = val
+      this.$emit('refresh', this.query)
     }
   }
 }
 </script>
 <style scoped>
- 
+ .el-pagination {
+   text-align: right;
+ }
+ .el-pagination__jump::after{
+    content: '，';
+ }
 </style>
