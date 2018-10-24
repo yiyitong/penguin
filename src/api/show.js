@@ -7,5 +7,5 @@ export default {
   add: (options) => Vue.axios.post(baseUrl, options),
   del: (options) => Vue.axios.delete(baseUrl, options),
   update: (options) => Vue.axios.put(baseUrl, options),
-  detail: (query) => Vue.axios.get(`${baseUrl}/detail`, query)
+  detail: (query) => Vue.axios.get(`${baseUrl}/detail`, {params: query})
 }
