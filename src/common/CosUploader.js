@@ -29,7 +29,7 @@ let upload = (file, progressFunc, callback) => {
           });
     })
 }
-
+//http://www.cnblogs.com/rich23/p/9258657.html
 export default {
     upload
 }
