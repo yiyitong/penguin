@@ -4,15 +4,10 @@
             <el-input v-model="showForm.name"></el-input>
         </el-form-item>
         <el-form-item label="海报" prop="posterURL">
-            <el-upload class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="uploadedFiles"
-            list-type="picture">
+            <upload>
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+            </upload>
         </el-form-item>
         <el-form-item label="演出日期">
             <el-col :span="11">
@@ -35,8 +30,9 @@
 </template>
 <script>
 import Column from '@/common/beans/Column' 
-import {TimePicker, DatePicker, Upload} from 'element-ui'
+import {TimePicker, DatePicker} from 'element-ui'
 import Datagrid from '@/components/Datagrid.vue'
+import Upload from '@/components/Upload.vue'
 export default {
     data () {
         return {
@@ -77,7 +73,7 @@ export default {
         ElTimePicker: TimePicker,
         ElDatePicker: DatePicker,
         Datagrid,
-        ElUpload: Upload
+        Upload
     },
     props: ['item'],
     computed: {
