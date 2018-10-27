@@ -10,11 +10,11 @@ let config = {
 }
 
 let upload = (file, progressFunc, callback) => {
-     getAuth().then(({data}) => {
+     //getAuth().then(({data}) => {
         var cos = new COS({
-          SecretId: data.data.tmpSecretId, // 'AKIDYw77tRiqhMo21ostCG4dw0sXyGLCCHae', 
-          SecretKey: data.data.tmpSecretKey,//'xg9MJ0RcYEiwveAXgbIl00mMktoUw98t' //
-          XCosSecurityToken: data.data.sessionToken
+          SecretId: /*data.data.tmpSecretId, */ 'AKIDYw77tRiqhMo21ostCG4dw0sXyGLCCHae', 
+          SecretKey: /*data.data.tmpSecretKey,*/'xg9MJ0RcYEiwveAXgbIl00mMktoUw98t'
+          //XCosSecurityToken: data.data.sessionToken
           });
           cos.sliceUploadFile({
             Bucket: config.Bucket,
@@ -31,7 +31,7 @@ let upload = (file, progressFunc, callback) => {
             // 需要清空上传控件，方法见下一步
             callback(err, data)
           });
-    })
+    //})
 }
 //http://www.cnblogs.com/rich23/p/9258657.html
 //https://blog.csdn.net/qq_41485414/article/details/80134908

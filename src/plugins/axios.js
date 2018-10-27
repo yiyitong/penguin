@@ -2,10 +2,14 @@
 
 import Vue from 'vue';
 import axios from "axios";
+import storageAPI from '@/common/storageAPI'
+import ERROR_CODE from '@/common/ErrorCode.json'
+import {Message} from 'element-ui'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+console.info(storageAPI.getValueFromStorage('token'))
+axios.defaults.headers.common['x-token'] = storageAPI.getValueFromStorage('token');
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
@@ -22,7 +26,7 @@ _axios.interceptors.request.use(
     return config;
   },
   function(error) {
-    // Do something with request error
+    Message.error({message: '请求超时!'});
     return Promise.reject(error);
   }
 );
@@ -30,11 +34,20 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   function(response) {
-    // Do something with response data
+    if (response.status && response.status == 200 && !response.data.result) {
+      Message.error({message: ERROR_CODE[response.data.code]});
+      return;
+    }
     return response;
   },
   function(error) {
-    // Do something with response error
+    if (error.response.status == 504||error.response.status == 404) {
+      Message.error({message: '服务器被吃了⊙﹏⊙∥'});
+    } else if (error.response.status == 403) {
+      Message.error({message: '权限不足,请联系管理员!'});
+    }else {
+      Message.error({message: '未知错误!'});
+    }
     return Promise.reject(error);
   }
 );

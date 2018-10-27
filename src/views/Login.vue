@@ -5,8 +5,8 @@
             <el-form-item label="用户名：" prop="name">
                 <el-input v-model="loginForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="passwd">
-                <el-input v-model="loginForm.passwd"></el-input>
+            <el-form-item label="密码：" prop="password">
+                <el-input v-model="loginForm.password"></el-input>
             </el-form-item>
             <el-form-item>
             <el-checkbox label="记住密码"  v-model="remember"></el-checkbox>
@@ -29,18 +29,21 @@
 
 <script>
 import ForgetPasswd from '@/components/ForgetPasswd.vue'
+import adminAPI from '@/api/admin.js'
+import storageAPI from '@/common/storageAPI.js'
+
 export default {
     data () {
         return {
             loginForm: {
                 name: '',
-                passwd: ''
+                password: ''
             },
             rules: {
                 name: [
                     { required: true, message: '请输入用户名', trigger: 'blur' }
                 ],
-                passwd: [
+                password: [
                     { required: true, message: '请输入密码', trigger: 'blur' }
                 ]
             },
@@ -55,11 +58,18 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$router.push('/home');
+            this.login();
           } else {
             return false;
           }
         });
+      },
+      login () {
+          adminAPI.login(this.loginForm).then(({data}) => {
+              console.info(data)
+              storageAPI.addKeyToStorage('token', data.data.token)
+              this.$router.push('/home');
+          })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
@@ -78,6 +88,8 @@ export default {
 <style scoped>
     section {
         width: 400px;
-        margin: 0 auto;
+        margin: 50px auto;
+        background-color: #eee;
+        padding: 15px 50px 15px 15px;
     }
 </style>

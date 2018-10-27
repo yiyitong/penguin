@@ -49,6 +49,11 @@ export default {
       },
       handleFinished (err, data) {
           console.info('finished:', err, data)
+          if (err) {
+              this.error = err
+          } else {
+              this.$emit('finish', data)
+          }
       },
       doUpload (event) {
         const files = event.target.files;

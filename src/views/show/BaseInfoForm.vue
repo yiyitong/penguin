@@ -3,28 +3,36 @@
         <el-form-item label="名称" prop="name">
             <el-input v-model="showForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="海报" prop="posterURL">
-            <upload>
+        <el-form-item label="海报" prop="poster">
+            <img :src="showForm.poster" v-if="showForm.poster" width="200px"/>
+            <upload @finish="handlePicUploaded" v-else>
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </upload>
         </el-form-item>
+        <el-form-item label="城市" prop="city">
+            <el-select v-model="showForm.city" filterable placeholder="请选择">
+            <el-option
+                v-for="item in cities"
+                :key="item"
+                :label="item"
+                :value="item">
+            </el-option>
+        </el-select>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="address">
+            <el-input v-model="showForm.address"></el-input>
+        </el-form-item>
         <el-form-item label="演出日期">
             <el-col :span="11">
                 <el-date-picker type="date" placeholder="开始日期" 
-                v-model="showForm.startDate" style="width: 100%;"></el-date-picker>
+                v-model="showForm.startTime" style="width: 100%;"></el-date-picker>
             </el-col>
             <el-col class="line" :span="2">-</el-col>
             <el-col :span="11">
                 <el-date-picker type="date" placeholder="结束日期" 
-                v-model="showForm.endDate" style="width: 100%;"></el-date-picker>
+                v-model="showForm.endTime" style="width: 100%;"></el-date-picker>
             </el-col>
-        </el-form-item>
-        <el-form-item label="演出票价" >
-            <datagrid :columns="columns" :records="showForm.ticketsList"
-                :empty-item="emptyTicket" editable @del="deleteTicketType" 
-                @add="addTicketType" @edit="editTicketType">
-            </datagrid>
         </el-form-item>
     </el-form>
 </template>
@@ -38,23 +46,13 @@ export default {
         return {
             showForm: {
                 name: '中秋晚会',
-                posterURL: '',
-                startDate: '',
-                endDate: '',
-                ticketsList: [{
-                    id: 1,
-                    name: '早鸟',
-                    dailyPrice: 100,
-                    allPrice: 300
-                }]
+                poster: '',
+                startTime: '',
+                endTime: '',
+                address: '',
+                city: ''
             },
-            columns: [
-                new Column('id', 'ID', 10, {visible: false}),
-                new Column('name', '种类名称', 50),
-                new Column('dailyPrice', '单日票票价', 50),
-                new Column('allPrice', '通票票价', 50),
-                new Column('ops', '操作', 80)
-            ],
+            cities: ['成都', '北京', '上海'],
             rules: {},
             emptyTicket: {
                 id: -1,
@@ -62,11 +60,7 @@ export default {
                 dailyPrice: null,
                 allPrice: null
             },
-            posterVisible: false,
-            uploadedFiles: [{
-                name: 'food.jpeg',
-                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-            }]
+            posterVisible: false
         }
     },
     components: {
@@ -75,7 +69,7 @@ export default {
         Datagrid,
         Upload
     },
-    props: ['item'],
+    props: ['item', 'mode'],
     computed: {
         posterUrl () {
             let url = this.uploadedFiles.length > 0 ? this.uploadedFiles[0].url : '';
@@ -84,26 +78,12 @@ export default {
         }
     },
     methods: {
-        deleteTicketType(item) {
-            console.info('del the ticket type: ', item)
-            let index = this.showForm.ticketsList.findIndex(el => el.id === item.id);
-            this.showForm.ticketsList.splice(index, 1);
-        },
-        addTicketType(item) {
-            console.info('add the ticket type: ', item)
-            this.showForm.ticketsList.push(item)
-        },
-        editTicketType(item) {
-            console.info('edit the ticket type: ', item)
-            let index = this.showForm.ticketsList.findIndex(el => el.id === item.id);
-            this.showForm.ticketsList.splice(index, 1, item)
-        },
-        handlePreview(file) {
-            console.info(file)
-        },
         handleRemove(file, fileList) {
             console.log(file, fileList);
             this.uploadedFiles = []
+        },
+        handlePicUploaded(res) {
+            this.showForm.poster = 'http://' + res.Location;
         },
         reset() {
             this.$refs['showForm'].resetFields();
@@ -118,3 +98,8 @@ export default {
     }
 }
 </script>
+<style>
+.el-select {
+    width: 100%;
+}
+</style>

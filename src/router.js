@@ -31,7 +31,7 @@ export default new Router({
         path: '/ddetail/:id',
         name: 'ddetail',
         meta: {
-          title: '编辑演出'
+          title: '编辑演出-{{curShow.name}}'
         },
         component: () => import('./views/show/ShowViewer.vue')
       },

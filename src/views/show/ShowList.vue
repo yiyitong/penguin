@@ -11,7 +11,7 @@
             <el-button  icon="el-icon-plus" @click="beginAdd">添加</el-button>
         </div>
         <el-dialog title="添加演出" :visible.sync="addShowVisible">
-            <base-info-form ref='baseinfo'></base-info-form>
+            <base-info-form ref='baseinfo' mode="add"></base-info-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="handleAddCancel">取 消</el-button>
                 <el-button type="primary" @click="handleAdd">确 定</el-button>
@@ -35,8 +35,7 @@ export default {
     data () {
         return {
             displayList: [{id: 1, name: '中秋晚会', adresses: '成都,上海,北京',
-            checkers: ['person1'], tickets: {
-                normal: 200, level1: 300}
+                checkers: ['person1']
             }],
             columns: [
                 new Column('id', 'ID', 150, {visible: false}),
@@ -45,7 +44,6 @@ export default {
                 new Column('addresses', '演出地点', 150),
                 new Column('time', '演出时间', 150),
                 new Column('checkers', '验票员', 150),
-                new Column('tickets', '票量', 250),
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
@@ -107,8 +105,8 @@ export default {
             let newShow = this.$refs['baseinfo'].showForm;
             console.info('will add new show:', newShow);
             // Ajax
-            showAPI.add(newShow).then((res) => {
-                this.displayList.push(res)
+            showAPI.add(newShow).then(({data}) => {
+                this.displayList.push(data.data)
             })
         }
     },

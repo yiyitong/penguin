@@ -11,6 +11,13 @@
                 <el-button type="primary" @click="handleEdit">确 定</el-button>
             </div>
         </el-tab-pane>
+        <el-tab-pane label="票据">
+            <el-alert title="提示：" type="info"
+                close-text="知道了">
+                管理员可增、删、改票据类型，设定每种票据的价格和容量
+            </el-alert>
+            <ticket-mg></ticket-mg>
+        </el-tab-pane>
         <el-tab-pane label="验票员">
             <el-alert title="提示：" type="info"
                 close-text="知道了">
@@ -32,6 +39,7 @@ import {Tabs, TabPane} from 'element-ui'
 import BaseInfoForm from './BaseInfoForm.vue'
 import CheckorMg from './CheckorMg.vue'
 import ShowDetail from './ShowDetail.vue'
+import TicketMg from './TicketMg.vue'
 import showAPI from '@/api/show.js'
 import {
   mapState
@@ -45,7 +53,8 @@ export default {
         ElTabPane: TabPane,
         BaseInfoForm,
         CheckorMg,
-        ShowDetail
+        ShowDetail,
+        TicketMg
     },
     computed: {
         ...mapState({
