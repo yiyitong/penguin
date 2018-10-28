@@ -1,10 +1,13 @@
 <template>
     <section>
         <datagrid :columns="columns" :records="displayList" :emptyText="emptyText"
-         class="el-table_pagination" pagable @refresh="refreshShows">
+         class="el-table_pagination" pagable @refresh="refreshShows" :total="total">
             <div class="td-ops" slot-scope="{item}" slot="ops" >
                 <a @click="gotoEdit(item)">编辑</a>
                 <a title="删除" name="bin" @click="delOne(item)">删除</a>
+            </div>
+            <div slot="poster" slot-scope="{item}">
+                <img :src="item.poster" height="50px"/>
             </div>
         </datagrid>
         <div style="text-align:left; margin-top: 10px;">
@@ -34,21 +37,20 @@ import {
 export default {
     data () {
         return {
-            displayList: [{id: 1, name: '中秋晚会', adresses: '成都,上海,北京',
-                checkers: ['person1']
-            }],
+            displayList: [],
             columns: [
                 new Column('id', 'ID', 150, {visible: false}),
                 new Column('name', '演出名称', 150, {sortable: true}),
                 new Column('poster', '海报', 150, {sortable: true}),
-                new Column('addresses', '演出地点', 150),
-                new Column('time', '演出时间', 150),
-                new Column('checkers', '验票员', 150),
+                new Column('city', '城市', 150),
+                new Column('address', '演出地点', 150),
+                new Column('startTime', '演出时间', 150),
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
             addShowVisible: false,
-            query: new Query(new Order('showTime', Order.DIREC.DESC))
+            query: new Query(new Order('startTime', Order.DIREC.DESC)),
+            total: 0
         }
     },
     components: {
@@ -62,9 +64,9 @@ export default {
         initData () {
             let query = methods.deepCopy({}, this.query)
             showAPI.ls(query).then(({data}) => {
-                this.displayList = data.content
-                this.total = data.total
-                if (data.content.length === 0) {
+                this.displayList = data.data.records
+                this.total = data.data.total
+                if (this.displayList.length === 0) {
                     this.emptyText = '无相关数据'
                 }
             })
@@ -84,7 +86,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                showAPI.del(item.id).then(() => { 
+                showAPI.del({id: item.id}).then(() => { 
                     this.$message({
                         type: 'success',
                         message: '删除成功!'

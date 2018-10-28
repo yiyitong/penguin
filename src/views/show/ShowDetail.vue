@@ -1,5 +1,5 @@
 <template>
-    <app-edit :contents="contents"></app-edit>
+    <app-edit :contents="contents" @finish="handleFinished"></app-edit>
 </template>
 <script>
 import AppEdit from '@/components/AppEdit.vue'
@@ -10,21 +10,27 @@ export default {
     },
     data () {
         return {
-            contents: [{
-                type: 'text',
-                value: 'hello'
-            },
-            {
-                type: 'image',
-                value: 'hello'
-            }]
+            contents: []
         }
     },
     mounted () {
         let curShowId = this.$route.params.id;
-        showAPI.detail({id: curShowId}).then((res) => {
-            this.contents = res
+        showAPI.detail({showId: curShowId}).then(({data}) => {
+            this.contents = data.data
         })
+    },
+    methods: {
+        handleFinished (contents) {
+            let showId = this.$route.params.id
+            showAPI.updateDetail(showId, contents).then(({data}) => {
+                if (data.result) {
+                    this.$message({
+                        message: '操作成功！',
+                        type: 'success'
+                    });
+                }
+            })
+        }
     }
 }
 </script>

@@ -1,9 +1,9 @@
 import COS from 'cos-js-sdk-v5';
-import Vue from 'vue';
+// import Vue from 'vue';
 
-let getAuth = () => {
-    return Vue.axios.get('/auth/temp');
-}
+// let getAuth = () => {
+//     return Vue.axios.get('/auth/temp');
+// }
 let config = {
   Bucket:'music-1257848582',
   Region: 'ap-chengdu'

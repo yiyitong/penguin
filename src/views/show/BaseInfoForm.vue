@@ -45,7 +45,7 @@ export default {
     data () {
         return {
             showForm: {
-                name: '中秋晚会',
+                name: '',
                 poster: '',
                 startTime: '',
                 endTime: '',
@@ -93,7 +93,7 @@ export default {
         }
     },
     mounted () {
-        console.info('baseinfofrom mouted。。。。')
+        console.info('baseinfofrom mouted。。。。', this.item)
         this.showForm = Object.assign(this.showForm, this.item)
     }
 }

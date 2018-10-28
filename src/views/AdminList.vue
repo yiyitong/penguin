@@ -3,8 +3,8 @@
         <datagrid :columns="columns" :records="adminList"
          class="el-table_pagination" editable  @del="handleDel" 
                 @add="handleAdd" @edit="handleEdit" :empty-item="emptyItem">
-            <div  slot-scope="{item}" slot="auth" >
-                <el-select v-model="item.auth" v-if="item.editing" placeholder="请选择">
+            <div  slot-scope="{item}" slot="role" >
+                <el-select v-model="item.role" v-if="item.editing" placeholder="请选择">
                     <el-option
                     v-for="(value, key) in authLevel"
                     :key="key"
@@ -12,7 +12,11 @@
                     :value="key">
                     </el-option>
                 </el-select>
-                <span v-else>{{authLevel[item.auth]}}</span>
+                <span v-else>{{authLevel[item.role]}}</span>
+            </div>
+            <div  slot="password" slot-scope="{item}"> 
+                <el-input type="password" v-model="item.password" v-if="item.editing"/>
+                <span v-else>*******</span>
             </div>
         </datagrid>
     </section>
@@ -29,14 +33,17 @@ import {
 export default {
     data () {
         return {
-            adminList: [{id: 1, name: 'super', passwd: 'qqian',
-            auth: '0', checkCount: 0
+            adminList: [{
+                id: 1,
+                name: 'lx',
+                password: '12345',
+                role: 'SUPER'
             }],
             columns: [
                 new Column('id', 'ID', 150, {visible: false}),
                 new Column('name', '名称', 150, {sortable: true}),
-                new Column('passwd', '密码', 150),
-                new Column('auth', '管理员类型', 150),
+                new Column('password', '密码', 150),
+                new Column('role', '管理员类型', 150),
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
@@ -58,29 +65,46 @@ export default {
         Datagrid
     },
     methods: {
+        initData () {
+            adminAPI.ls().then(({data}) => {
+                console.info('admin ls:', data)
+                if (data.result) {
+                    this.adminList = data.data
+                    if (this.adminList.length === 0) {
+                        this.emptyText = '无相关数据'
+                    }
+                } else {
+                    this.emptyText = '无相关数据'
+                }
+            })
+        },
         handleDel(item) {
             console.info('del the checkor: ', item)
             adminAPI.del(item.id).then(() => {
-                let index = this.checkorList.findIndex(el => el.id === item.id);
-                this.checkorList.splice(index, 1);
+                let index = this.adminList.findIndex(el => el.id === item.id);
+                this.adminList.splice(index, 1);
             })       
         },
         handleAdd(item) {
             console.info('add the checkor: ', item)
             adminAPI.add(item).then((res) => {
-                this.checkorList.push(res) 
+                let index = this.adminList.length - 1;
+                this.adminList.splice(index, 1, data.data);
             })
         },
         handleEdit(item) {
             console.info('edit the checkor: ', item)
             adminAPI.update(item).then(() => {
-                let index = this.checkorList.findIndex(el => el.id === item.id);
-                this.checkorList.splice(index, 1, item);
+                let index = this.adminList.findIndex(el => el.id === item.id);
+                this.adminList.splice(index, 1, item);
             }) 
         },
         updateEmptyShowName (val) {
             this.emptyItem.showName = val;
         }
+    },
+    mounted () {
+        this.initData()
     }
 }
 </script>

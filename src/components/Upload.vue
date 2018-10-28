@@ -2,7 +2,6 @@
   <div class="upload">
     <div class="oss_file" @click="handleClick">
       <input type="file" ref="input" :name="name" @change="doUpload"/>
-      <img :src="url" alt="">
       <slot ><el-button type="primary">点击上传文件</el-button></slot>
     </div>
     <slot name="tip"></slot>
@@ -18,7 +17,7 @@ export default {
             url: ''
         }
     },
-    props: ['name', 'disabled'],
+    props: ['name', 'disabled', 'params'],
     methods: {
       checkPic:  (files) => {
         var fileList = [];
@@ -52,7 +51,8 @@ export default {
           if (err) {
               this.error = err
           } else {
-              this.$emit('finish', data)
+              let res = Object.assign(data, this.params)
+              this.$emit('finish', res)
           }
       },
       doUpload (event) {

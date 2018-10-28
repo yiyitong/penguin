@@ -5,21 +5,18 @@
                 <div v-for="(content, index) in contentList" class="editor-item"
                     :key="index" :tabindex="index" @mouseover="handleMouseIn(index, content)"
                     @mouseout="handleMouseOut(index, content)">
-                    <div class="textarea" contenteditable="true" v-if="content.type === 'text'" >
-                        {{content.value}}
-                    </div>
-                    <!-- <textarea v-if="content.type === 'text'" v-model="content.value"></textarea> -->
+                    <!-- <div class="textarea" contenteditable="true" v-html="content.value"
+                        @input="content.value=$event.target.innerHTML"
+                        v-if="content.type === 'text'" >
+                    </div> -->
+                    <textarea v-if="content.type === 'text'"
+                        v-model="content.value" @input="handleTextInput"></textarea>
                     <img v-if="content.type === 'image'" :src="content.value">
                     <div class="add-module" v-if="content.type === 'empty'">
                         <el-button @click="change2Text(index)">A</el-button>
-                        <el-upload :data="{index: index}"
-                            class="el-button"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :show-file-list="false"
-                            :on-success="handleUploadSuccess" 
-                            :before-upload="beforeImageUpload" titlr="只能上传jpg/png文件，且不超过2M">
-                            <i class="el-icon-picture" ></i>
-                        </el-upload>
+                        <upload @finish="handlePicUploaded" :params="{index: index}">
+                            <el-button icon="el-icon-picture"></el-button>
+                        </upload>
                         <el-button @click="delOne(index)" icon="el-icon-delete"></el-button>
                     </div>
                     <div class="editor-item-ops" v-if="content.type !== 'empty' " v-show="content.visible">
@@ -43,7 +40,7 @@
 </template>
 
 <script>
-import {Upload} from 'element-ui'
+import Upload from '@/components/Upload.vue'
 export default {
     data () {
         return {
@@ -52,7 +49,7 @@ export default {
     },
     props: ['contents'],
     components: {
-        ElUpload: Upload
+        Upload
     },
     methods: {
         spliceContent (start, count, added) {
@@ -88,9 +85,8 @@ export default {
         change2Image (index) {
             this.spliceContent(index, 1, {type: 'image', value: '', visible: false})
         },
-        handleUploadSuccess(res, file) {
-            // res 需要返回附加data：index
-            let imageUrl = URL.createObjectURL(file.raw);
+        handlePicUploaded(res) {
+            let imageUrl = 'http://' + res.Location;
             this.spliceContent(res.index, 1, {type: 'image', value: imageUrl, visible: false})
         },
         beforeImageUpload(file) {
@@ -116,8 +112,22 @@ export default {
             this.spliceContent(index, 1, item);
         },
         finishEdit () {
-
+            this.$emit('finish', this.contentList)
+        },
+        initContentList () {
+            this.contentList = this.contents.map(el => {
+                el.visible = false;
+                return el;
+            });
+        },
+        handleTextInput (ev) {
+            let newHeight = ev.target.scrollHeight + 5;
+            console.info(ev.target.scrollHeight);
+            ev.target.style.height = newHeight + 'px';
         }
+    },
+    watch: {
+        'contents': 'initContentList'
     },
     mounted () {
         this.contentList = this.contents.map(el => {
@@ -158,6 +168,9 @@ export default {
     margin: 0;
     font-size: 16px;
 }
+.upload {
+    display: inline-block;
+}
 .el-button:hover {
     color: #409eff;
     border-color: #c6e2ff;
@@ -176,7 +189,7 @@ div.editor-item:hover{
     box-shadow: 0 0 10px #ccc;
 
 }
-.editor-item>.textarea, 
+.editor-item>textarea, 
  .editor-item>img{
     width: 100%;
     height: auto;

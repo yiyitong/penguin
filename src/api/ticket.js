@@ -1,10 +1,9 @@
 
 import Vue from 'vue';
 
-let baseUrl = '/admin/account';
+let baseUrl = '/show/ticket';
 export default {
-  login: (query) => Vue.axios.post('/admin/login', query),
-  ls: () => Vue.axios.get(`${baseUrl}/list`),
+  ls: (query) => Vue.axios.get(`${baseUrl}/list`, {params:query}),
   add: (options) => Vue.axios.post(`${baseUrl}/add`, options),
   del: (options) => Vue.axios.post(`${baseUrl}/delete`, options),
   update: (options) => Vue.axios.post(`${baseUrl}/update`, options)

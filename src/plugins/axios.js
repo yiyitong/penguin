@@ -8,7 +8,7 @@ import {Message} from 'element-ui'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-console.info(storageAPI.getValueFromStorage('token'))
+console.info('token:', storageAPI.getValueFromStorage('token'))
 axios.defaults.headers.common['x-token'] = storageAPI.getValueFromStorage('token');
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -35,8 +35,12 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   function(response) {
     if (response.status && response.status == 200 && !response.data.result) {
-      Message.error({message: ERROR_CODE[response.data.code]});
-      return;
+      if (response.data.code === 'SERVICE_0004') {
+        window.location.href = '/'
+      } else {
+        let errInfo = ERROR_CODE[response.data.code] || '未知错误'
+        Message.error({message: errInfo});
+      }
     }
     return response;
   },

@@ -17,30 +17,25 @@ import {
 export default {
     data () {
         return {
-            checkorList: [{id: 1, weID: 'yiyitong', weName: 'qqian',
-            showName: '中秋晚会', checkCount: 0
-            }],
+            checkorList: [],
             columns: [
                 new Column('id', 'ID', 150, {visible: false}),
-                new Column('weID', '微信号', 150, {sortable: true}),
-                new Column('weName', '微信名', 150, {sortable: true}),
-                new Column('showName', '演出', 150, {editable: false}),
-                new Column('checkCount', '已检票数', 150, {editable: false}),
+                new Column('wxId', '微信号', 150, {sortable: true}),
+                new Column('wxName', '微信名', 150, {sortable: true}),
+                // new Column('checkCount', '已检票数', 150, {editable: false}),
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
             emptyItem: {
                 id: -1,
-                weID: null,
-                weName: null,
-                showName: '',
-                checkCount: 0
+                wxId: null,
+                wxName: null
             }
         }
     },
     computed: {
         ...mapState({
-        curShow: state => state.shows.curShow
+            curShow: state => state.shows.curShow
         })
     },
     components: {
@@ -52,22 +47,31 @@ export default {
     methods: {
         handleDel(item) {
             console.info('del the checkor: ', item)
-            checkorAPI.del(item.id).then((res) => {
-                let index = this.checkorList.findIndex(el => el.id === item.id);
-                this.checkorList.splice(index, 1);
+            checkorAPI.del({id: item.id}).then(({data}) => {
+                if (data.result) {
+                    let index = this.checkorList.findIndex(el => el.id === item.id);
+                    this.checkorList.splice(index, 1);
+                }
             })       
         },
         handleAdd(item) {
             console.info('add the checkor: ', item)
-            checkorAPI.add(item).then((res) => {
-                this.checkorList.push(res) 
+            let showId = this.$route.params.id;
+            item.showId = showId;
+            checkorAPI.add(item).then(({data}) => {
+                if (data.result) {
+                    let index = this.ticketsList.length - 1;
+                    this.checkorList.splice(index, 1, data.data);
+                }
             })
         },
         handleEdit(item) {
             console.info('edit the checkor: ', item)
-            checkorAPI.update(item).then((res) => {
-                let index = this.checkorList.findIndex(el => el.id === item.id);
-                this.checkorList.splice(index, 1, item);
+            checkorAPI.update(item).then(({data}) => {
+                if (data.result) {
+                    let index = this.checkorList.findIndex(el => el.id === item.id);
+                    this.checkorList.splice(index, 1, data.data);
+                }
             }) 
         },
         updateEmptyShowName (val) {
@@ -75,7 +79,15 @@ export default {
         }
     },
     mounted () {
-        this.emptyItem.showName = this.curShow.name;
-    }
+        let curShowId = this.$route.params.id;
+        checkorAPI.ls({showId: curShowId}).then(({data}) => {
+            if (data.result) {
+                this.checkorList = data.data;
+                if (this.checkorList.length === 0) {
+                    this.emptyText = '无相关数据！'
+                }
+            }
+        })
+    },
 }
 </script>

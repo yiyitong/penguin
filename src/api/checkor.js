@@ -1,10 +1,10 @@
 
 import Vue from 'vue';
 
-let baseUrl = '/checkor';
+let baseUrl = '/show/checker';
 export default {
-  ls: (query) => Vue.axios.get(baseUrl, query),
-  add: (options) => Vue.axios.post(baseUrl, options),
-  del: (options) => Vue.axios.delete(baseUrl, options),
-  update: (options) => Vue.axios.put(baseUrl, options)
+  ls: (query) => Vue.axios.get(`${baseUrl}/list`, {params: query}),
+  add: (options) => Vue.axios.post(`${baseUrl}/add`, options),
+  del: (options) => Vue.axios.post(`${baseUrl}/delete`, options),
+  update: (options) => Vue.axios.post(`${baseUrl}/update`, options)
 }

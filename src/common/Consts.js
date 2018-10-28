@@ -1,7 +1,7 @@
 
 const ADMIN_ANTH_TYPE = {
-    '0': '超级管理员',
-    '1': '内容管理员'
+    'SUPER': '超级管理员',
+    'ADMIN': '内容管理员'
 }
 
 const ORDER_FILTER_TYPE = {

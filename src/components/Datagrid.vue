@@ -132,14 +132,17 @@ export default {
       default () {
         return new Query();
       }
+    },
+    total: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       curIndex: -1, //编辑时使用,
       mode: 'list',
-      curOrigin: {},
-      total: 0
+      curOrigin: {}
     }
   },
   computed: {
@@ -175,7 +178,7 @@ export default {
       this.$emit('del', item)
     },
     handleSure (item) {
-      item.editint = false
+      item.editing = false
       this.$emit(this.mode, item)
       this.mode = 'list'
       this.curIndex = -1

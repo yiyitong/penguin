@@ -10,7 +10,8 @@ import { Button,
     Col,
     Alert,
     Select,
-    Option
+    Option,
+    Message
 } from 'element-ui'
 
 Vue.use(Button);
@@ -23,9 +24,11 @@ Vue.use(Col);
 Vue.use(Alert);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Message);
 
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
+Vue.prototype.$message = Message;
 
