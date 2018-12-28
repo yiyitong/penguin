@@ -24,7 +24,6 @@ Vue.use(Col);
 Vue.use(Alert);
 Vue.use(Select);
 Vue.use(Option);
-Vue.use(Message);
 
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;

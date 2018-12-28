@@ -35,4 +35,17 @@ html,body {
     float: left;
     width: calc(100% - 230px);
     padding: 0 15px;
+    height: 100%;
   }
+
+  .el-tabs__content {
+    height: calc(100% - 60px);
+    overflow-y: auto!important;
+}
+.td-ops > a {
+  margin-right: 20px;
+}
+.td-ops > a:hover {
+  color: #3c8dbc;
+  cursor: pointer;
+}

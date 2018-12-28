@@ -6,12 +6,12 @@
                 <el-input v-model="loginForm.name"></el-input>
             </el-form-item>
             <el-form-item label="密码：" prop="password">
-                <el-input v-model="loginForm.password"></el-input>
+                <el-input v-model="loginForm.password" type="password"></el-input>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
             <el-checkbox label="记住密码"  v-model="remember"></el-checkbox>
             <a @click="forgerPasswdVisible=true">忘记密码？</a>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
                 <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
                 <el-button @click="resetForm('loginForm')">取消</el-button>
@@ -68,6 +68,7 @@ export default {
           adminAPI.login(this.loginForm).then(({data}) => {
               console.info(data)
               storageAPI.addKeyToStorage('token', data.data.token)
+              storageAPI.addKeyToStorage('username', this.loginForm.name)
               this.$router.push('/home');
           })
       },

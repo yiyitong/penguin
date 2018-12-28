@@ -10,5 +10,7 @@ export default {
   detail: (query) => Vue.axios.get(`${baseUrl}/detail/list`, {params: query}),
   updateDetail: (id, contents) => Vue.axios.post(`${baseUrl}/detail/update`, {
     showId: id, contents: contents
-  })
+  }),
+  lsNames: (query) => Vue.axios.get(`${baseUrl}/name/list`, {params: query}),
+  info: (query) => Vue.axios.get(`${baseUrl}`, {params: query})
 }

@@ -1,5 +1,5 @@
 <template>
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" style="">
         <el-tab-pane label="基本信息">
             <el-alert type="info" title="提示："
                 close-text="知道了">
@@ -67,11 +67,7 @@ export default {
             console.info('edit show base info:', newShow)
             // ajax
             showAPI.update(newShow).then(() => {
-                this.$notify({
-                    title: '成功',
-                    message: '修改成功!',
-                    type: 'success'
-                    });
+                this.$message.success('修改成功!');
             })
         },
         handleReset () {
@@ -84,5 +80,9 @@ export default {
 .el-alert {
     margin-bottom: 10px;
 }
+.el-tabs {
+    height: calc(100% - 70px);
+}
+
 </style>
 

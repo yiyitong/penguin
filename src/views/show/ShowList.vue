@@ -1,5 +1,8 @@
 <template>
-    <section>
+    <section style="height: calc(100% - 60px); position: relative;">
+        <div style="text-align:left; margin-bottom: 10px;">
+            <el-button  icon="el-icon-plus" @click="beginAdd">添加</el-button>
+        </div>
         <datagrid :columns="columns" :records="displayList" :emptyText="emptyText"
          class="el-table_pagination" pagable @refresh="refreshShows" :total="total">
             <div class="td-ops" slot-scope="{item}" slot="ops" >
@@ -9,10 +12,11 @@
             <div slot="poster" slot-scope="{item}">
                 <img :src="item.poster" height="50px"/>
             </div>
+            <div slot-scope="{item}" slot="startTime" >
+                {{formatDate(item.startTime)}}
+            </div>
         </datagrid>
-        <div style="text-align:left; margin-top: 10px;">
-            <el-button  icon="el-icon-plus" @click="beginAdd">添加</el-button>
-        </div>
+        
         <el-dialog title="添加演出" :visible.sync="addShowVisible">
             <base-info-form ref='baseinfo' mode="add"></base-info-form>
             <div slot="footer" class="dialog-footer">
@@ -39,17 +43,18 @@ export default {
         return {
             displayList: [],
             columns: [
-                new Column('id', 'ID', 150, {visible: false}),
+                new Column('id', 'ID', 0, {visible: false}),
                 new Column('name', '演出名称', 150, {sortable: true}),
-                new Column('poster', '海报', 150, {sortable: true}),
-                new Column('city', '城市', 150),
+                new Column('poster', '海报', 100, {sortable: true}),
+                new Column('city', '城市', 50),
                 new Column('address', '演出地点', 150),
                 new Column('startTime', '演出时间', 150),
+                new Column('period', '场次', 150),
                 new Column('ops', '操作', 80)
             ],
             emptyText: '正在加载数据...',
             addShowVisible: false,
-            query: new Query(new Order('startTime', Order.DIREC.DESC)),
+            query: new Query(new Order('createTime', Order.DIREC.DESC)),
             total: 0
         }
     },
@@ -71,6 +76,10 @@ export default {
                 }
             })
         },
+        formatDate (miliSeconds = '') {
+            let dates = (miliSeconds + '').split(',').map(el => methods.formatDate(el))
+            return dates.join(',')
+        },
         refreshShows (query) {
             this.query = methods.deepCopy(this.query, query)
             this.initData()
@@ -82,9 +91,9 @@ export default {
         },
         delOne(item) {
             this.$confirm(`此操作将永久删除演出${item.name}, 是否继续?`, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
             }).then(() => {
                 showAPI.del({id: item.id}).then(() => { 
                     this.$message({
@@ -108,7 +117,10 @@ export default {
             console.info('will add new show:', newShow);
             // Ajax
             showAPI.add(newShow).then(({data}) => {
-                this.displayList.push(data.data)
+                if (data.result) {
+                    this.initData()
+                    this.addShowVisible = false;
+                }
             })
         }
     },
@@ -117,3 +129,20 @@ export default {
     }
 }
 </script>
+<style>
+.el-pagination {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.datagrid-viewer {
+    height: calc(100% - 60px);
+}
+.el-table {
+    height: 100%;
+}
+.el-table__body-wrapper {
+    height: calc(100% - 60px);
+    overflow-y: auto;
+}
+</style>

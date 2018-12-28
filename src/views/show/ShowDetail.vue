@@ -24,10 +24,7 @@ export default {
             let showId = this.$route.params.id
             showAPI.updateDetail(showId, contents).then(({data}) => {
                 if (data.result) {
-                    this.$message({
-                        message: '操作成功！',
-                        type: 'success'
-                    });
+                    this.$message.success("操作成功！") 
                 }
             })
         }

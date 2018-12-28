@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section style="height: calc(100% - 70px); position: relative;">
         <datagrid :columns="columns" :records="adminList"
          class="el-table_pagination" editable  @del="handleDel" 
                 @add="handleAdd" @edit="handleEdit" :empty-item="emptyItem">
@@ -80,15 +80,22 @@ export default {
         },
         handleDel(item) {
             console.info('del the checkor: ', item)
-            adminAPI.del(item.id).then(() => {
-                let index = this.adminList.findIndex(el => el.id === item.id);
-                this.adminList.splice(index, 1);
-            })       
+            this.$confirm(`此操作将永久删除管理员-${item.name}, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                adminAPI.del({id: item.id}).then(() => {
+                    let index = this.adminList.findIndex(el => el.id === item.id);
+                    this.adminList.splice(index, 1);
+                });
+            });
+                  
         },
         handleAdd(item) {
             console.info('add the checkor: ', item)
-            adminAPI.add(item).then((res) => {
-                let index = this.adminList.length - 1;
+            adminAPI.add(item).then(({data}) => {
+                let index = this.adminList.length;
                 this.adminList.splice(index, 1, data.data);
             })
         },
@@ -108,3 +115,15 @@ export default {
     }
 }
 </script>
+<style>
+.datagrid-viewer {
+    height: calc(100% - 60px);
+}
+.el-table {
+    height: 100%;
+}
+.el-table__body-wrapper {
+    height: calc(100% - 60px);
+    overflow-y: auto;
+}
+</style>

@@ -5,10 +5,11 @@ const ADMIN_ANTH_TYPE = {
 }
 
 const ORDER_FILTER_TYPE = {
-    '0': '全部',
-    '1': '已付款',
-    '2': '待付款',
-    '3': '已完成'
+    'All': '全部',
+    'Paid': '已付款',
+    'Unpaid': '未付款',
+    'Used': '已完成',
+    'Expired': '已过期'
 }
 
 export default {

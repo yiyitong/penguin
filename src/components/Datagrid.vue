@@ -1,5 +1,12 @@
 <template>
   <div class="datagrid-viewer">
+    <el-pagination v-if="pagable" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="query.page.index"
+      :page-sizes="[10, 20, 100]"
+      :page-size="query.page.size" :total="total"
+      layout="sizes, prev, pager, next, jumper, total">
+    </el-pagination>
    <el-table
     :data="displayRec" stripe
     style="width: 100%"
@@ -37,13 +44,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <el-pagination v-if="pagable" @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="query.page.index"
-      :page-sizes="[10, 20, 100]"
-      :page-size="query.page.size" :total="total"
-      layout="sizes, prev, pager, next, jumper, total">
-    </el-pagination>
+  
   <div style="text-align:left; margin-top: 10px;">
     <el-button v-if="addable && mode !=='add'" 
       icon="el-icon-plus" @click="beginAdd">添加</el-button>

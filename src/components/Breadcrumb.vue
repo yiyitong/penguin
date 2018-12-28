@@ -17,6 +17,7 @@ import {
   mapActions
 } from 'vuex'
 import methods from '@/common/methods.js'
+import showAPI from '@/api/show.js'
 
 export default {
   data () {
@@ -26,12 +27,13 @@ export default {
   },
   computed: {
     ...mapState({
-      links: state => state.links.links
+      links: state => state.links.links,
+      curShow: state => state.shows.curShow
     })
   },
   methods: {
     ...mapActions([
-      'setLinks', 'updateLinkTitle'
+      'setLinks', 'updateLinkTitle', 'setCurShow'
     ]),
     updateBreadCrumb (route) {
       let matched = route.matched, breadcrumbList = [{title: '首页', to: '/display'}]
@@ -60,13 +62,24 @@ export default {
     },
     handleRouteChange () {
       this.initBreadCrumb()
+    },
+    initCurShow () {
+      let curShowId = this.$route.params.id
+      if (!this.curShow.id && curShowId) {
+        showAPI.info({id: curShowId}).then(({data}) => {
+          if (data.result) {
+            this.setCurShow(data.data)
+          }
+        })
+      }
     }
   },
   watch: {
     '$route': 'handleRouteChange'
   },
   mounted () {
-    console.info(this.$route)
+    console.info('breadcrium:', this.$route, !this.curShow)
+    this.initCurShow()
     this.handleRouteChange()
   }
 }

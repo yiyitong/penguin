@@ -5,10 +5,10 @@ import Condition from "./Condition";
 export default class Query {
   static CONDITION_TYPE = Condition.TYPE;
   static ORDER_DIREC = Order.DIREC;
-  constructor(order = new Order("id"), page = new Page(), conditions = []) {
+  constructor(order = new Order("id"), page = new Page(), conditions = null) {
     this.page = page;
     this.order = order;
-    this.conditions = conditions;
+    this.filter = conditions;
 
     this.updateOrder = order => {
       if (!order) {
@@ -44,28 +44,13 @@ export default class Query {
       return direction;
     };
     this.hasCondition = key => {
-      let condition = conditions.find(item => {
-        return item.key === key;
-      });
-      return typeof condition !== "undefined";
+      return this.filter.prop === key;
     };
-    this.addCondition = condition => {
-      let index = this.conditions.findIndex(item => {
-        return item.equals(condition);
-      });
-      if (index === -1) {
-        this.conditions.push(condition);
-      } else {
-        Object.assign(this.conditions[index], condition);
-      }
+    this.setCondition = condition => {
+      this.filter = condition
     };
-    this.removeCondition = condition => {
-      let index = this.conditions.findIndex(item => {
-        return item.equals(condition);
-      });
-      if (index >= 0) {
-        this.conditions.splice(index, 1);
-      }
+    this.clearCondition = () => {
+      this.filter = null
     };
   }
 }
